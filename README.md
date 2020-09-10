@@ -13,4 +13,4 @@ In stochastic thinking part, we always used random library. I learned how statis
   
 Last part of the course is about understanding and modelling the experimental data, what can go wrong with our models, how to test our models. I learned how to implement linear regression. There are also sections about Machine Learning. I learned about clustering and classification, their algorithic solutions. But I didn't implement any machine learning code. At last there is section devoted to statistical sins, how to deceive people with your data.
   
-I reaally thanks to MIT for making such perfect lessons online.
+I thanks to MIT for making such lessons online.
