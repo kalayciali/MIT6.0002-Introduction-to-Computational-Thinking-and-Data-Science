@@ -33,7 +33,7 @@ def load_cows(filename):
     for line in f:
         ans=line.split(',')
         cows[ans[0]]=int(ans[1])
-    print('{0} cows loaded'.format(len(cows)), '\n')        
+    print('{0} cows loaded'.format(len(cows)), '\n')
     return cows
 
 
@@ -80,7 +80,7 @@ def greedy_cow_transport(cows,limit=10):
         result.append(trip)
     return result
 
-#cows= load_cows('ps1_cow_data.txt')
+cows= load_cows('ps1_cow_data.txt')
 #greedy_cow_transport(cows)
 
 # Problem 3
@@ -108,10 +108,8 @@ def brute_force(cows,limit=10):
     trips
     """
     # TODO: Your code here
-    cow_list=sorted(cows.items(), key= lambda x: x[1], reverse= True)    
-    # cow_list is [(cow_name, weight), ] sorted by weight
-    cow_dict = dict(cow_list)
-    # sorted cow_dict
+    # shallow copy of dict
+    cow_dict = cows.copy()
     res= []
     for partit in get_partitions(cow_dict.keys()):
         weighover= False
@@ -128,13 +126,13 @@ def brute_force(cows,limit=10):
             res= partit
     return res
 
-#def test_bruteforce():
-#    cows= load_cows('ps1_cow_data.txt')
-#    res= brute_force(cows)
-#    print(res)
-#    print(len(res))
-#    return res        
-#
+def test_bruteforce():
+    cows= load_cows('ps1_cow_data.txt')
+    res= brute_force(cows)
+    print(res)
+    print(len(res))
+    return res        
+
 #test_bruteforce()
 # Problem 4
     

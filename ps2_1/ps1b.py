@@ -16,10 +16,16 @@ def build_eggs(numItems, maxWeight):
     eggs = []
     for i in range(numItems):
         eggs.append(random.randint(1, maxWeight))
-    res= sorted(eggs)
-    return tuple(res)
+    eggs.sort()
+    return eggs
 
-def dp_make_weight(egg_weights, target):
+def get_distinct_eggs(eggs):
+    res = ()
+    for egg in set(eggs):
+        res = res + (egg, )
+    return res
+
+def dp_make_weight(egg_weights, target, memo= {}):
     """
     Find number of eggs to bring back, using the smallest number of eggs. Assumes there is
     an infinite supply of eggs of each weight, and there is always a egg of value 1.
@@ -35,23 +41,26 @@ def dp_make_weight(egg_weights, target):
     # TODO: Your code here
     # Recursive algorith without dynamic programming
     # don't expect too much performance
-    if egg_weights == () or target == 0:
+    if (get_distinct_eggs(egg_weights), target) in memo:
+        result = memo[(get_distinct_eggs(egg_weights), target)]
+    if egg_weights == [] or target == 0:
         result = (0, ())
     elif egg_weights[0] > target:
         #Explore right branch only (Don't take)
-        result= dp_make_weight(egg_weights[1:], target)
+        result= dp_make_weight(egg_weights[1:], target, memo)
     else:
         nextItem = egg_weights[0]
         #Explore left branch (take)
-        withEgg, withTake = dp_make_weight(egg_weights[1:], target- nextItem)
+        withEgg, withTake = dp_make_weight(egg_weights[1:], target- nextItem, memo)
         withEgg += 1
         #Explore right branch
         withoutEgg, withoutTake = dp_make_weight(egg_weights[1:], target)
         #Choose better branch
         if withEgg > withoutEgg:
-            result = (withEgg, withTake + (nextItem,)) 
+            result = (withEgg, withTake + (nextItem,))
         else:
             result = (withoutEgg, withoutTake)
+    memo[(get_distinct_eggs(egg_weights), target)] = result
     return result
 
 # EXAMPLE TESTING CODE, feel free to add more if you'd like

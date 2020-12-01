@@ -65,7 +65,7 @@ class WeightedEdge(Edge):
         return self.out_dist
 
     def __str__(self):
-        return '{0} -> {1} ({2},{3})'.format(self.src, self.dest, self.tot_dist, self.out_dist)
+        return '{0}->{1} ({2}, {3})'.format(self.src, self.dest, self.tot_dist, self.out_dist)
 
 
 class Digraph(object):

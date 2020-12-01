@@ -53,21 +53,22 @@ def load_map(map_filename):
         dest= Node(road[1])
         try:
             g.add_node(src)
-            # if it raises error
-        except:
+        except ValueError as ve:
+            #print(ve)
             pass
         try:
             g.add_node(dest)
-        except:
+        except ValueError as ve:
+            #print(ve)
             pass
         edge= WeightedEdge(src,dest,int(road[2]), int(road[3]))
-        g.add_edge(edge)        
+        g.add_edge(edge)
     return g
 
 # Problem 2c: Testing load_map
 # Include the lines used to test load_map below, but comment them out
 
-#print(load_map('test_load_map.txt'))
+# print(load_map('mit_map.txt'))
 
 #
 # Problem 3: Finding the Shorest Path using Optimized Search Method
@@ -80,7 +81,7 @@ def load_map(map_filename):
 #
 # Problem 3b: Implement get_best_path
 
-def get_best_path(digraph, start, end, path, max_dist_outdoors, best_dist,best_path ):
+def get_best_path(digraph, start, end, max_total_dist, max_dist_outdoors, path ,best_path ):
     """
     Finds the shortest path between buildings subject to constraints.
 
@@ -114,17 +115,14 @@ def get_best_path(digraph, start, end, path, max_dist_outdoors, best_dist,best_p
         max_dist_outdoors constraints, then return None.
     """
     # TODO
-    if path==None:
-        path= [[start], 0, 0]
-    if digraph.has_node(start):
+    path[0].append(start)
+    if (digraph.has_node(start) and digraph.has_node(end)):
         raise ValueError('node not in graph')
     if start==end:
         # base(GOD) level
         # return path as res
         return path
-#    print(path)
-    edges=digraph.get_edges_for_node(start)
-    for edge in edges:
+    for edge in digraph.get_edges_for_node(start):
         child = edge.get_destination()
         if child in path[0]:
             continue
@@ -132,31 +130,20 @@ def get_best_path(digraph, start, end, path, max_dist_outdoors, best_dist,best_p
             dist = path[1]+ edge.get_total_distance()
             out = path[2]+ edge.get_outdoor_distance()
             # I eliminate nonsuitable edges
-            if out > max_dist_outdoors :
+            if out > max_dist_outdoors or dist > max_total_dist:
                 continue
+            # faster
             if best_path != None:
                 if best_path[1] < dist :
                     continue
-            # I need to copy path in order to keep track of numbers
-            copied = path[:]
-            copied[0] = path[0][:]
-            copied[0].append(child)
-            copied[1] = dist
-            copied[2] = out
             # recursion
-            res= get_best_path(digraph, child, end, copied, max_dist_outdoors, best_dist,best_path )
-            
-            if res != None and res[2]<= max_dist_outdoors and res !=best_path:
-                
-                if best_dist == None and best_path == None:
-                    best_dist = res[1]
+            path[1] = dist
+            path[2] = out
+            res= get_best_path(digraph, child, end,max_total_dist, max_dist_outdoors, path, best_path )
+            if res != None:
+                if best_path == None or best_path[1] > res[1]:
                     best_path = res
-                    print(best_path, 'best_path')
-                    print(best_dist)
-                else:
-                    if best_path[1] > res[1]:
-                        best_dist = res[1]
-                        best_path = res 
+                    print(best_path)
     return best_path
    
 # Problem 3c: Implement directed_dfs
@@ -189,17 +176,16 @@ def directed_dfs(digraph, start, end, max_total_dist, max_dist_outdoors):
         max_dist_outdoors constraints, then raises a ValueError.
     """
     # TODO
-    best_path = get_best_path(digraph, Node(start), Node(end), None, max_dist_outdoors, None,  None)
+    best_path = get_best_path(digraph, Node(start), Node(end),max_total_dist, max_dist_outdoors, [[], 0, 0], None)
     print("DFS best path", best_path)
-    if best_path == None or best_path[1] > max_total_dist:
-        raise ValueError('not compatible with limit')
-        #return None
-    return list(map(str, best_path[0]))
+    if best_path != None:
+        return best_path
+    print("No path found")
+    return None
 
 
 graph= load_map('mit_map.txt')
-res= directed_dfs(graph, '4', '10', 250, 100)
-print(res)
+directed_dfs(graph, '32', '56', 250, 0)
 
 #================================================================
 #Begin tests -- you do no need to modify anything below this line
