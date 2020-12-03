@@ -6,6 +6,7 @@ This course is composed of three main topics;
 * optimization, 
 * stochastic thinking, and 
 * modelling. 
+
 While applying them in python, you gain also good coding practice with python. 
 
 In the first part, I learn about what is objective function, what are the constraints while optimizing the result. To do optimization, I learn different algorithms; such as greedy algorithm, search tree algorithm. I learned how to implement them recursively, how to make them more efficient by dynamic programming.
