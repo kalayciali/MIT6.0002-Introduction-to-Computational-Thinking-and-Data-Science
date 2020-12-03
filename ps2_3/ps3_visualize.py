@@ -22,7 +22,7 @@ class RobotVisualization:
         self.height = height
         self.num_robots = num_robots
         self.furniture_tiles = furniture_tiles
-        
+
         # Initialize a drawing surface
         self.master = Tk()
         self.w = Canvas(self.master, width=500, height=500)
